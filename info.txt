@@ -1,0 +1,8 @@
+
+psql 'postgresql://neondb_owner:npg_jvUD43bSxtYH@ep-raspy-block-aio4kl2c-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'
+
+dbname = "neonbd"
+user = "neondb_owner"
+password = "npg_jvUD43bSxtYH"
+host = "ep-raspy-block-aio4kl2c-pooler.c-4.us-east-1.aws.neon.tech"
+port = 5432
