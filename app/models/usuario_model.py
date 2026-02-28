@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 class Usuario(BaseModel):
-    id_usuario: int = None
+    id_usuario: int | None = None
     correo_electronico: str
     contrasena_hash: str
     rol: str
