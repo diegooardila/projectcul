@@ -10,7 +10,7 @@ class FacultadController:
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
-            cursor.execute("INSERT INTO facultades (nombre_facultad) VALUES (%s)", (facultad.nombre_facultad,))
+            cursor.execute("INSERT INTO facultad (nombre_facultad) VALUES (%s)", (facultad.nombre_facultad,))
             conn.commit()
             conn.close()
             return {"resultado": "Facultad creada"}

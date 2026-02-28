@@ -1,10 +1,13 @@
-from fastapi import FastAPI
 from routes.usuario_routes import router as usuario_router
 from routes.periodo_acadmico_routes import router as periodo_academico_router
 from routes.inscripcion_routes import router as inscripcion_router
-from fastapi.middleware.cors import CORSMiddleware
 from routes.facultad_routes import router as facultad_router
 from routes.estudiante_routes import router as estudiante_router
+from routes.estado_routes import router as estado_router
+from routes.docente_routes import router as docente_router
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
@@ -28,6 +31,8 @@ app.include_router(periodo_academico_router)
 app.include_router(inscripcion_router)
 app.include_router(facultad_router)
 app.include_router(estudiante_router)
+app.include_router(estado_router)
+app.include_router(docente_router)
 
 
 

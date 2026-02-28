@@ -7,17 +7,17 @@ router = APIRouter()
 nueva_facultad = FacultadController()
 
 
-@router.post("Crear una Facultad")
+@router.post("/create_facultad")
 async def create_facultad(facultad: Facultad):
     rpta = nueva_facultad.create_facultad(facultad)
     return rpta
 
-@router.get("Obtener una Facultad",response_model=Facultad)
+@router.get("/get_facultad/{id_facultad}",response_model=Facultad)
 async def get_facultad(id_facultad: int):
     rpta = nueva_facultad.get_facultad(id_facultad)
     return rpta
 
-@router.get("Obtener todas las Facultades")
+@router.get("/get_facultades")
 async def get_facultades():
     rpta = nueva_facultad.get_facultades()
     return rpta

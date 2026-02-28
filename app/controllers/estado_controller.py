@@ -1,19 +1,19 @@
 import psycopg2
 from fastapi import HTTPException
 from config.db_config import get_db_connection
-from models.usuario_model import Usuario
+from models.estado_model import Estado
 from fastapi.encoders import jsonable_encoder
 
-class UsuarioController:
+class EstadoController:
         
-    def create_usuario(self, usuario: Usuario):   
+    def create_estado(self, estado: Estado):   
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
-            cursor.execute("INSERT INTO usuario (correo_electronico,contrasena_hash,rol,id_estado) VALUES (%s, %s, %s, %s)", (usuario.correo_electronico, usuario.contrasena_hash, usuario.rol, usuario.id_estado))
+            cursor.execute("INSERT INTO estado (nombre_estado) VALUES (%s)", (estado.nombre_estado,))
             conn.commit()
             conn.close()
-            return {"resultado": "Usuario creado"}
+            return {"resultado": "Estado creado"}
         except psycopg2.Error as err:
             print(err)
             # Si falla el INSERT, los datos no quedan guardados parcialmente en la base de datos
@@ -23,11 +23,12 @@ class UsuarioController:
             conn.close()
         
 
-    def get_usuario(self, id_usuario: int):
+    def get_estado(self, id_estado: int):
+
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM usuarios WHERE id_usuario = %s", (id_usuario,))
+            cursor.execute("SELECT * FROM estados WHERE id_estado = %s", (id_estado,))
             result = cursor.fetchone()
             payload = []
             content = {} 
@@ -35,14 +36,11 @@ class UsuarioController:
             result = cursor.fetchone()
 
             if result is None:
-                raise HTTPException(status_code=404, detail="Usuario no encontrado")
+                raise HTTPException(status_code=404, detail="Estado no encontrado")
 
             content = {
-                'id_usuario': int(result[0]),
-                'correo_electronico': result[1],
-                'contrasena_hash': result[2],
-                'rol': result[3],
-                'id_estado': int(result[4])
+                'id_estado': int(result[0]),
+                'nombre_estado': result[1]
             }
 
             json_data = jsonable_encoder(content)
@@ -56,21 +54,18 @@ class UsuarioController:
         finally:
             conn.close()
        
-    def get_usuarios(self):
+    def get_estados(self):
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM usuarios")
+            cursor.execute("SELECT * FROM estados")
             result = cursor.fetchall()
             payload = []
             content = {} 
             for data in result:
                 content={
-                    'id_usuario':int(data[0]),
-                    'correo_electronico':data[1],
-                    'contrasena_hash':data[2],
-                    'rol':data[3],
-                    'id_estado':int(data[4])
+                    'id_estado':int(data[0]),
+                    'nombre_estado':data[1]
                 }
                 payload.append(content)
                 content = {}
@@ -78,7 +73,7 @@ class UsuarioController:
             if result:
                return {"resultado": json_data}
             else:
-                raise HTTPException(status_code=404, detail="Usuario no encontrado")  
+                raise HTTPException(status_code=404, detail="Estado no encontrado")  
                 
         except psycopg2.Error as err:
             print(err)
@@ -86,7 +81,20 @@ class UsuarioController:
         finally:
             conn.close()
     
-    
+    def update_estado(self, id_estado: int, estado: Estado):
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute("UPDATE estados SET nombre_estado = %s WHERE id_estado = %s", (estado.nombre_estado, id_estado))
+            conn.commit()
+            conn.close()
+            return {"resultado": "Estado actualizado"}
+        except psycopg2.Error as err:
+            print(err)
+            # Si falla el UPDATE, los datos no quedan guardados parcialmente en la base de datos
+             # Se usa para deshacer los cambios de la transacción activa cuando ocurre un error en el try.
+            conn.rollback()
+        finally:
+            conn.close()
        
-
-##user_controller = UserController()
+##estado_controller = EstadoController()

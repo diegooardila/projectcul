@@ -10,7 +10,7 @@ class EstudianteController:
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
-            cursor.execute("INSERT INTO estudiantes (codigo_estudiantil,nombres,apellidos,id_usuario,id_facultad) VALUES (%s, %s, %s, %s, %s)", (estudiante.codigo_estudiantil, estudiante.nombres, estudiante.apellidos, estudiante.id_usuario, estudiante.id_facultad))
+            cursor.execute("INSERT INTO estudiante (codigo_estudiantil,nombres,apellidos,id_usuario,id_facultad) VALUES (%s, %s, %s, %s, %s)", (estudiante.codigo_estudiantil, estudiante.nombres, estudiante.apellidos, estudiante.id_usuario, estudiante.id_facultad))
             conn.commit()
             conn.close()
             return {"resultado": "Estudiante creado"}

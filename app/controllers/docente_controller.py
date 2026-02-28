@@ -1,19 +1,19 @@
 import psycopg2
 from fastapi import HTTPException
 from config.db_config import get_db_connection
-from models.usuario_model import Usuario
+from models.docente_model import Docente
 from fastapi.encoders import jsonable_encoder
 
-class UsuarioController:
+class DocenteController:
         
-    def create_usuario(self, usuario: Usuario):   
+    def create_docente(self, docente: Docente):   
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
-            cursor.execute("INSERT INTO usuario (correo_electronico,contrasena_hash,rol,id_estado) VALUES (%s, %s, %s, %s)", (usuario.correo_electronico, usuario.contrasena_hash, usuario.rol, usuario.id_estado))
+            cursor.execute("INSERT INTO docente (numero_documento,nombres,apellidos,id_usuario,id_facultad) VALUES (%s, %s, %s, %s, %s)", (docente.numero_documento, docente.nombres, docente.apellidos, docente.id_usuario, docente.id_facultad))
             conn.commit()
             conn.close()
-            return {"resultado": "Usuario creado"}
+            return {"resultado": "Docente creado"}
         except psycopg2.Error as err:
             print(err)
             # Si falla el INSERT, los datos no quedan guardados parcialmente en la base de datos
@@ -23,11 +23,11 @@ class UsuarioController:
             conn.close()
         
 
-    def get_usuario(self, id_usuario: int):
+    def get_docente(self, id_docente: int):
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM usuarios WHERE id_usuario = %s", (id_usuario,))
+            cursor.execute("SELECT * FROM docentes WHERE id_docente = %s", (id_docente,))
             result = cursor.fetchone()
             payload = []
             content = {} 
@@ -35,14 +35,15 @@ class UsuarioController:
             result = cursor.fetchone()
 
             if result is None:
-                raise HTTPException(status_code=404, detail="Usuario no encontrado")
+                raise HTTPException(status_code=404, detail="Docente no encontrado")
 
             content = {
-                'id_usuario': int(result[0]),
-                'correo_electronico': result[1],
-                'contrasena_hash': result[2],
-                'rol': result[3],
-                'id_estado': int(result[4])
+                'id_docente': int(result[0]),
+                'numero_documento': result[1],
+                'nombres': result[2],
+                'apellidos': result[3],
+                'id_usuario': int(result[4]),
+                'id_facultad': int(result[5])
             }
 
             json_data = jsonable_encoder(content)
@@ -56,21 +57,22 @@ class UsuarioController:
         finally:
             conn.close()
        
-    def get_usuarios(self):
+    def get_docentes(self):
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM usuarios")
+            cursor.execute("SELECT * FROM docentes")
             result = cursor.fetchall()
             payload = []
             content = {} 
             for data in result:
                 content={
-                    'id_usuario':int(data[0]),
-                    'correo_electronico':data[1],
-                    'contrasena_hash':data[2],
-                    'rol':data[3],
-                    'id_estado':int(data[4])
+                    'id_docente':int(data[0]),
+                    'numero_documento':data[1],
+                    'nombres':data[2],
+                    'apellidos':data[3],
+                    'id_usuario':int(data[4]),
+                    'id_facultad':int(data[5])
                 }
                 payload.append(content)
                 content = {}
@@ -78,7 +80,7 @@ class UsuarioController:
             if result:
                return {"resultado": json_data}
             else:
-                raise HTTPException(status_code=404, detail="Usuario no encontrado")  
+                raise HTTPException(status_code=404, detail="Docente no encontrado")  
                 
         except psycopg2.Error as err:
             print(err)
@@ -87,6 +89,5 @@ class UsuarioController:
             conn.close()
     
     
-       
-
-##user_controller = UserController()
+    
+##docente_controller = DocenteController()
