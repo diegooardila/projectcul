@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from routes.usuario_routes import router as usuario_router
+from routes.periodo_acadmico_routes import router as periodo_academico_router
+from routes.inscripcion_routes import router as inscripcion_router
 from fastapi.middleware.cors import CORSMiddleware
+from routes.facultad_routes import router as facultad_router
+from routes.estudiante_routes import router as estudiante_router
 
 app = FastAPI()
 
@@ -20,6 +24,12 @@ app.add_middleware(
 )
 
 app.include_router(usuario_router)
+app.include_router(periodo_academico_router)
+app.include_router(inscripcion_router)
+app.include_router(facultad_router)
+app.include_router(estudiante_router)
+
+
 
 if __name__ == "__main__":
     import uvicorn
