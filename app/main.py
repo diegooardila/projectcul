@@ -5,6 +5,10 @@ from routes.facultad_routes import router as facultad_router
 from routes.estudiante_routes import router as estudiante_router
 from routes.estado_routes import router as estado_router
 from routes.docente_routes import router as docente_router
+from routes.docente_routes import router as docente_router
+from routes.curso_routes import router as curso_router
+from routes.aula_routes import router as aula_router
+from routes.administrador_routes import router as administrador_router
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -33,6 +37,9 @@ app.include_router(facultad_router)
 app.include_router(estudiante_router)
 app.include_router(estado_router)
 app.include_router(docente_router)
+app.include_router(curso_router)
+app.include_router(aula_router)
+app.include_router(administrador_router)
 
 
 
